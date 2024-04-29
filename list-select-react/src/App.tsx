@@ -1,30 +1,15 @@
 import { useEffect, useState } from 'react'
+import { useFetch } from './hooks/useFetch'
 
 interface IRaca {
   nome: string
 }
 
 function App() {
-  const [racas, setRacas] = useState<Array<IRaca>>([])
+  // const [racas, setRacas] = useState<string>('')
   const [busca, setBusca] = useState<string>('')
 
-  useEffect(() => {
-    fetch('http://localhost:8080/doguinhos').then((resposta) =>
-      resposta.json().then((dados) => {
-        setRacas(dados)
-      })
-    )
-  }, [])
-
-  useEffect(() => {
-    if (busca !== '') {
-      fetch('http://localhost:8080/doguinhos?nome=' + busca).then((resposta) =>
-        resposta.json().then((dados) => {
-          setRacas(dados)
-        })
-      )
-    }
-  }, [busca])
+  const { data: racas } = useFetch<IRaca[]>('http://localhost:3000/doguinhos')
 
   return (
     <>
@@ -38,7 +23,7 @@ function App() {
         }}
       />
       <ul>
-        {racas.map((raca) => (
+        {racas?.map((raca) => (
           <li key={raca.nome}>{raca.nome}</li>
         ))}
       </ul>
